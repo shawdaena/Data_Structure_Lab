@@ -1,0 +1,248 @@
+// Using Washall Algorithom in path matrix
+
+#include<bits/stdc++.h>
+using namespace std;
+
+int main()
+{
+    int n;
+    cin >> n;
+
+    int adjMatrix[n][n];
+    int tempMatrix[n][n];
+
+    for(int i = 0;i<n;i++)
+    {
+        for(int j = 0;j<n;j++)
+        {
+            cin >> adjMatrix[i][j];
+        }
+    }
+
+    for(int i = 0;i<n;i++)
+    {
+        for(int j = 0;j<n;j++)
+        {
+            for(int k = 0;k<n;k++)
+            {
+                tempMatrix[j][k] = adjMatrix[j][k] || (adjMatrix[j][i] && adjMatrix[i][k]);
+            }
+        }
+        mempcpy(adjMatrix, tempMatrix, n*n*sizeof(int));
+    }
+
+    cout << "Output" << endl;
+
+    for(int i = 0;i<n;i++)
+    {
+        for(int j = 0;j<n;j++)
+        {
+            cout << adjMatrix[i][j] << " ";
+        }
+        cout << endl;
+    }
+
+    int cnt = 0;
+    for(int i = 0;i<n;i++)
+    {
+        for(int j = 0;j<n;j++)
+        {
+            if(adjMatrix[i][j] == 0)
+                cnt++;
+
+        }
+    }
+}
+/*
+INPUT
+
+1 1 1 0
+0 1 0 1
+1 0 1 0
+0 1 0 1
+
+OUTPUT
+
+1 1 1 1
+0 1 0 1
+1 1 1 1
+0 1 0 1
+
+*/
+
+//Weighted graph
+
+#include<bits/stdc++.h>
+using namespace std;
+
+#define inf 100000
+
+int main()
+{
+    int n;
+    cin >> n;
+
+    int adjMatrix[n][n];
+    int tempMatrix[n][n];
+
+    for(int i = 0;i<n;i++)
+    {
+        for(int j = 0;j<n;j++)
+        {
+            cin >> adjMatrix[i][j];
+            if(adjMatrix[i][j] == 0)
+            {
+                adjMatrix[i][j] = inf;
+            }
+        }
+    }
+
+
+    for(int i = 0;i<n;i++)
+    {
+        for(int j = 0;j<n;j++)
+        {
+            for(int k = 0;k<n;k++)
+            {
+                tempMatrix[j][k] = min(adjMatrix[j][k], (adjMatrix[j][i] + adjMatrix[i][k]));
+            }
+        }
+        mempcpy(adjMatrix, tempMatrix, n*n*sizeof(int));
+    }
+    cout << "Output" << endl;
+
+
+    for(int i = 0;i<n;i++)
+    {
+        for(int j = 0;j<n;j++)
+        {
+            cout << adjMatrix[i][j] << " ";
+        }
+        cout << endl;
+    }
+
+    for(int i = 0;i<n;i++)
+    {
+        for(int j = 0;j<n;j++)
+        {
+            if(adjMatrix[i][j] >= 1)
+                cout<<(i+1)<<"th node has direct path to "<<(j+1)<<"th node\n";
+        }
+    }
+
+}
+
+
+/*
+
+4
+2 5 0 0
+2 0 1 4
+5 3 3 3
+4 2 3 0
+
+output
+
+2 5 6 9
+2 4 1 4
+5 3 3 3
+4 2 3 6
+
+*/
+// path matrix with strong connected or not strongly
+
+#include<bits/stdc++.h>
+using namespace std;
+
+int main()
+{
+    int n;
+    cin >> n;
+
+    int adjMatrix[n][n];
+    int multiMatrix[n][n];
+    int tempMatrix[n][n];
+    int sumMatrix[n][n];
+    int pathMatrix[n][n];
+    int numOfZero = 0;
+
+    for(int i = 0;i<n;i++)
+    {
+        for(int j = 0;j<n;j++)
+        {
+            cin >> adjMatrix[i][j];
+        }
+    }
+
+   /* for(int i = 0;i<n;i++)
+    {
+        cout << "Adjacent of" << i + 1 << ": ";
+        for(int j = 0;j<n;j++)
+        {
+            if(adjMatrix[i][j] != 0)
+                cout << j + 1 << " ";
+        }
+        cout << endl;
+    }*/
+
+    mempcpy(multiMatrix, adjMatrix, n*n*sizeof(int));
+    mempcpy(sumMatrix, adjMatrix, n*n*sizeof(int));
+
+    for(int i = 0;i<n;i++)
+    {
+        for(int j = 0;j<n;j++)
+        {
+            for(int k = 0;k<n;k++)
+            {
+                int temp = 0;
+                for(int l = 0;l<n;l++)
+                {
+                    temp += adjMatrix[j][l]*multiMatrix[l][k];
+                }
+                tempMatrix[j][k] = temp;
+                sumMatrix[j][k] += temp;
+            }
+        }
+        mempcpy(multiMatrix, tempMatrix, n*n*sizeof(int));
+    }
+
+    for(int i = 0;i<n;i++)
+    {
+        for(int j = 0;j<n;j++)
+        {
+            if(sumMatrix[i][j] == 0)
+            {
+                pathMatrix[i][j] = 0;
+                numOfZero++;
+            }
+            else
+                pathMatrix[i][j] = 1;
+        }
+    }
+    cout << endl;
+
+    for(int i = 0;i<n;i++)
+    {
+        for(int j = 0;j<n;j++)
+        {
+            cout << pathMatrix[i][j]<<" ";
+        }
+        cout << endl;
+    }
+    cout << endl;
+
+    if(numOfZero == 0)
+        cout << "STrong" << endl;
+    else
+        cout << "NOt strong" << endl;
+}
+
+/*
+
+4
+1 1 1 0
+0 1 0 1
+1 0 1 0
+0 1 0 1
+*/
+
